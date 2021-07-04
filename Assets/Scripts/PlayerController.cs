@@ -7,9 +7,7 @@ public class PlayerController : MonoBehaviour
     CharacterController controller;
 
     public float speed = 5.0f;
-    public float jumpSpeed = 10.0f;
-    public float gravity = 20.0f;
-    public float maxJumps = 2;
+    public float drag = 20.0f;
 
     private Vector2 _moveDirection = Vector2.zero;
 
@@ -23,17 +21,19 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // movedirection lmao
-        _moveDirection = new Vector2(speed, Input.GetAxis("Vertical"));
+        _moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         _moveDirection *= speed;
 
+        /**
         // jump
         if (Input.GetButton("Jump"))
         {
             _moveDirection.y = jumpSpeed;
         }
-        
+        **/
+
         // apply gravity
-        _moveDirection.y -= gravity * Time.deltaTime * Time.deltaTime;
+        _moveDirection.y -= drag * Time.deltaTime * Time.deltaTime;
 
         // move the character
         controller.Move(_moveDirection);
