@@ -1,3 +1,6 @@
+#if !WORLD_CS
+#define WORLD_CS
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +15,11 @@ public class WorldController : MonoBehaviour
 
     private List<Transform> _tWorldObjects;
     // The transforms of the blocks the world is made out of
+    private List<Transform> _tGroundObjects = new List<Transform>();
     private float _fScrollSpeed;
     // The scroll speed of the world, in units/second
+    private float _fGroundSize;
+    // The size of the ground, so objects at the end of the ground can be moved to the beggining of the ground
 
     void Start()
     // Start is called before the first frame update
@@ -24,6 +30,15 @@ public class WorldController : MonoBehaviour
         // Why GetComponentsInChildren includes the object itself is beyond me
         _tWorldObjects.Remove( this.GetComponent<Transform>() );
 
+        for ( int i = 0; i < _tWorldObjects.Count; ++i )
+        {
+            if ( _tWorldObjects[i].gameObject.name.Substring( 0, 6 ).Equals( "ground" ) )
+            {
+                _tGroundObjects.Add( _tWorldObjects[i] );
+                Renderer rTemp = _tGroundObjects[i].gameObject.GetComponent<Renderer>();
+                _fGroundSize += rTemp.bounds.size.x;
+            }
+        }
 
         // Initializing this here to make it more obvious that 1.0f is the starting speed and that it's not constant
         _fScrollSpeed = 1.0f;
@@ -52,18 +67,11 @@ public class WorldController : MonoBehaviour
     void RemoveBlock( GameObject gToBeRemoved )
     //If floor block, move to right of screen, else set inactive
     {
-        if ( gToBeRemoved.transform.position.y == -1 )
+        if ( _tGroundObjects.Contains( gToBeRemoved.transform ) )
         {
-            // Entity is a floor block, move to right of screen
+            // Entity is a floor block, move to right of ground blocks
             Vector3 vPos = gToBeRemoved.transform.position;
-            Renderer rVis = gToBeRemoved.gameObject.GetComponent<Renderer>();
-            float fObjWidth = rVis.bounds.size.x;
-
-            // Trick the game into thinking the screen size is a vector so i can get the screen size in game units
-            // this is probably not the best way to do this, so if you know of another way to get the width of the screen in game units please feel free to replace this code
-            float fScreenSize = 2 * (Camera.main.ScreenToWorldPoint( new Vector3( Camera.main.pixelWidth, 0, /* Distance from camera to plane = */ 10 ) ).x - Camera.main.transform.position.x);
-
-            gToBeRemoved.transform.position = new Vector3( ( vPos.x + fScreenSize + fObjWidth ), vPos.y, vPos.z );
+            gToBeRemoved.transform.position = new Vector3( ( vPos.x + _fGroundSize ), vPos.y, vPos.z );
             return;
         }
 
@@ -73,3 +81,4 @@ public class WorldController : MonoBehaviour
 
     }
 }
+#endif //if !WORLD_CS
