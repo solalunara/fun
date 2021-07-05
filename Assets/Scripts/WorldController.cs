@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+// Any variable marked as public is set in the unity editor, so the values can be changed for testing/debugging without recompiling the script
 public class WorldController : MonoBehaviour
 {
+    public float fDifficulty;
+    // How quickly the game ramps up, with 0 being no rampup and 1 being double the speed once a second
+    public float fMaxSpeed;
+    // The max speed of the game, for an infinite mode
+    
     private Transform[] _tWorldObjects;
     // The transforms of the blocks the world is made out of
     private float _fScrollSpeed;
     // The scroll speed of the world, in units/second
-    private float _fDifficulty = .01f;
-    // How quickly the game ramps up, with 0 being no rampup and 1 being double the speed once a second
 
     void Start()
     // Start is called before the first frame update
@@ -23,14 +26,16 @@ public class WorldController : MonoBehaviour
         _tWorldObjects = tAllObjects.ToArray();
 
 
-        // Why am i initializing this here? C++ ptsd, that's why.
+        // Initializing this here to make it more obvious that 1.0f is the starting speed and that it's not constant
         _fScrollSpeed = 1.0f;
     }
 
     void Update()
     // Update is called once per frame
     {
-        _fScrollSpeed *= 1 + ( _fDifficulty * Time.deltaTime );
+        if ( _fScrollSpeed < fMaxSpeed )
+            _fScrollSpeed *= 1 + ( fDifficulty * Time.deltaTime );
+        
         for ( int i = 0; i < _tWorldObjects.GetLength( 0 ); ++i )
         {
             Vector3 vPos = _tWorldObjects[i].position;
