@@ -9,8 +9,8 @@ public class WorldController : MonoBehaviour
     // How quickly the game ramps up, with 0 being no rampup and 1 being double the speed once a second
     public float fMaxSpeed;
     // The max speed of the game, for an infinite mode
-    
-    private Transform[] _tWorldObjects;
+
+    private List<Transform> _tWorldObjects;
     // The transforms of the blocks the world is made out of
     private float _fScrollSpeed;
     // The scroll speed of the world, in units/second
@@ -19,11 +19,10 @@ public class WorldController : MonoBehaviour
     // Start is called before the first frame update
     {
         // Get the transforms of all the blocks that make up the world, and store it locally
-        List<Transform> tAllObjects = new List<Transform>(GetComponentsInChildren<Transform>( /* Include Inactive Objects = */ false ));
+        _tWorldObjects = new List<Transform>(GetComponentsInChildren<Transform>( /* Include Inactive Objects = */ false ));
 
         // Why GetComponentsInChildren includes the object itself is beyond me
-        tAllObjects.Remove( this.GetComponent<Transform>() );
-        _tWorldObjects = tAllObjects.ToArray();
+        _tWorldObjects.Remove( this.GetComponent<Transform>() );
 
 
         // Initializing this here to make it more obvious that 1.0f is the starting speed and that it's not constant
@@ -36,7 +35,7 @@ public class WorldController : MonoBehaviour
         if ( _fScrollSpeed < fMaxSpeed )
             _fScrollSpeed *= 1 + ( fDifficulty * Time.deltaTime );
         
-        for ( int i = 0; i < _tWorldObjects.GetLength( 0 ); ++i )
+        for ( int i = 0; i < _tWorldObjects.Count; ++i )
         {
             Vector3 vPos = _tWorldObjects[i].position;
             _tWorldObjects[i].position = new Vector3( ( vPos.x - ( _fScrollSpeed*Time.deltaTime ) ), vPos.y, vPos.z );
@@ -70,6 +69,7 @@ public class WorldController : MonoBehaviour
 
         // Entity is not a floor block, set inactive
         gToBeRemoved.gameObject.SetActive( false );
+        _tWorldObjects.Remove( gToBeRemoved.transform );
 
     }
 }
