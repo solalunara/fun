@@ -56,7 +56,7 @@ public class WorldController : MonoBehaviour
         if ( _fScrollSpeed < fMaxSpeed )
             _fScrollSpeed *= 1 + ( fDifficulty * Time.deltaTime );
         
-        for ( int i = 0; i < _tWorldObjects.Count; ++i )
+        for ( int i = -1; ++i < _tWorldObjects.Count; )
         {
             Vector3 vPos = _tWorldObjects[i].position;
             _tWorldObjects[i].position = new Vector3( ( vPos.x - ( _fScrollSpeed*Time.deltaTime ) ), vPos.y, vPos.z );
