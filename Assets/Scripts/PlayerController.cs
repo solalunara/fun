@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
         rPlayerBody.AddForce(netHorizontalForce);
 
-
+        StartCoroutine(CollisionHelper());
 
     }
 
@@ -49,6 +49,12 @@ public class PlayerController : MonoBehaviour
             netForceApplied += Vector2.right * speed * Time.deltaTime;
         }
         return netForceApplied;
+    }
+
+    private IEnumerator CollisionHelper()
+    {
+        
+        yield return null;
     }
 
     private void OnCollisionEnter2D(Collision2D cOther)
