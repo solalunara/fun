@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         bool leftPressed = Input.GetKey(KeyCode.LeftArrow);
         bool rightPressed = Input.GetKey(KeyCode.RightArrow);
 
-        
+
         Vector2 netHorizontalForce = NetForceHorizontal(leftPressed, rightPressed);
 
         //Debug.Log(netHorizontalForce);
