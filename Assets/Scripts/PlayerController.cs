@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     BoxCollider2D bPlayerCollider;
     //CharacterController controller;
 
-    public int speed = 5000;
+    public const int speed = 5000;
     //public float drag = 20.0f;
 
     //private Vector2 _moveDirection = Vector2.zero;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
         
         Vector2 netHorizontalForce = NetForceHorizontal(leftPressed, rightPressed);
 
-        Debug.Log(netHorizontalForce);
+        //Debug.Log(netHorizontalForce);
 
         rPlayerBody.AddForce(netHorizontalForce);
 
