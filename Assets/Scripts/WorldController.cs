@@ -39,7 +39,7 @@ public class WorldController : MonoBehaviour
     void DataChanged()
     {
         _fGroundSize = 0;
-        for ( int i = 0; i < _tWorldObjects.Count; ++i )
+        for ( int i = -1; ++i < _tWorldObjects.Count; )
         {
             if ( _tWorldObjects[i].gameObject.name.Substring( 0, 6 ).Equals( "ground" ) )
             {
