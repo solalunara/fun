@@ -6,17 +6,12 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rPlayerBody;
     BoxCollider2D bPlayerCollider;
-    //CharacterController controller;
 
     public const int speed = 5000;
-    //public float drag = 20.0f;
-
-    //private Vector2 _moveDirection = Vector2.zero;
 
     // Start is called before the first frame update
     void Start()
     {
-        //controller = GetComponent<CharacterController>();
         rPlayerBody = GetComponent<Rigidbody2D>();
         bPlayerCollider = GetComponent<BoxCollider2D>();
     }
@@ -36,27 +31,6 @@ public class PlayerController : MonoBehaviour
         rPlayerBody.AddForce(netHorizontalForce);
 
 
-
-
-        /*
-        // movedirection lmao
-        _moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        _moveDirection *= speed;
-
-        
-        // jump
-        if (Input.GetButton("Jump"))
-        {
-            _moveDirection.y = jumpSpeed;
-        }
-        
-
-        // apply gravity
-        _moveDirection.y -= drag * Time.deltaTime * Time.deltaTime;
-
-        // move the character
-        controller.Move(_moveDirection);
-       */
 
     }
 
@@ -79,15 +53,37 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D( Collision2D cOther )
     {
-        Debug.Log( "this object just collided" );
+        //Debug.Log( "this object just collided" );
     }
     private void OnCollisionStay2D( Collision2D cOther )
     {
-        Debug.Log( "collision staying" );
+        //Debug.Log( "collision staying" );
     }
     private void OnCollisionExit2D( Collision2D cOther )
     {
-        Debug.Log( "this object is no longer colliding with an object" );
+        //Debug.Log( "this object is no longer colliding with an object" );
     }
     
 }
+
+        /*
+        // movedirection lmao
+        _moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        _moveDirection *= speed;
+
+        
+        // jump
+        if (Input.GetButton("Jump"))
+        {
+            _moveDirection.y = jumpSpeed;
+        }
+        
+
+        // apply gravity
+        _moveDirection.y -= drag * Time.deltaTime * Time.deltaTime;
+
+        // move the character
+        controller.Move(_moveDirection);
+       */
+
+       
