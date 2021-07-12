@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     BoxCollider2D bPlayerCollider;
     //CharacterController controller;
 
-    public int speed = 50;
+    public int speed = 5000;
     //public float drag = 20.0f;
 
     //private Vector2 _moveDirection = Vector2.zero;
