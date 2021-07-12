@@ -30,6 +30,15 @@ public class WorldController : MonoBehaviour
         // Why GetComponentsInChildren includes the object itself is beyond me
         _tWorldObjects.Remove( this.GetComponent<Transform>() );
 
+        DataChanged();
+
+        // Initializing this here to make it more obvious that 1.0f is the starting speed and that it's not constant
+        _fScrollSpeed = 1.0f;
+    }
+
+    void DataChanged()
+    {
+        _fGroundSize = 0;
         for ( int i = 0; i < _tWorldObjects.Count; ++i )
         {
             if ( _tWorldObjects[i].gameObject.name.Substring( 0, 6 ).Equals( "ground" ) )
@@ -39,9 +48,6 @@ public class WorldController : MonoBehaviour
                 _fGroundSize += rTemp.bounds.size.x;
             }
         }
-
-        // Initializing this here to make it more obvious that 1.0f is the starting speed and that it's not constant
-        _fScrollSpeed = 1.0f;
     }
 
     void Update()
