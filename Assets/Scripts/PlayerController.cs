@@ -76,5 +76,18 @@ public class PlayerController : MonoBehaviour
         }
         return netForceApplied;
     }
+
+    private void OnCollisionEnter2D( Collision2D cOther )
+    {
+        Debug.Log( "this object just collided" );
+    }
+    private void OnCollisionStay2D( Collision2D cOther )
+    {
+        Debug.Log( "collision staying" );
+    }
+    private void OnCollisionExit2D( Collision2D cOther )
+    {
+        Debug.Log( "this object is no longer colliding with an object" );
+    }
     
 }
