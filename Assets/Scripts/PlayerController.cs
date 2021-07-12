@@ -36,54 +36,53 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 NetForceHorizontal(bool leftPressed, bool rightPressed)
     {
-        if(leftPressed && rightPressed) return Vector2.zero;
+        if (leftPressed && rightPressed) return Vector2.zero;
 
         Vector2 netForceApplied = new Vector2();
 
-        if(leftPressed) 
+        if (leftPressed)
         {
-            netForceApplied += Vector2.left*speed*Time.deltaTime;
+            netForceApplied += Vector2.left * speed * Time.deltaTime;
         }
-        if(rightPressed)
+        if (rightPressed)
         {
-            netForceApplied += Vector2.right*speed*Time.deltaTime;
+            netForceApplied += Vector2.right * speed * Time.deltaTime;
         }
         return netForceApplied;
     }
 
-    private void OnCollisionEnter2D( Collision2D cOther )
+    private void OnCollisionEnter2D(Collision2D cOther)
     {
         //Debug.Log( "this object just collided" );
     }
-    private void OnCollisionStay2D( Collision2D cOther )
+    private void OnCollisionStay2D(Collision2D cOther)
     {
         //Debug.Log( "collision staying" );
     }
-    private void OnCollisionExit2D( Collision2D cOther )
+    private void OnCollisionExit2D(Collision2D cOther)
     {
         //Debug.Log( "this object is no longer colliding with an object" );
     }
-    
+
 }
 
-        /*
-        // movedirection lmao
-        _moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        _moveDirection *= speed;
+/*
+// movedirection lmao
+_moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+_moveDirection *= speed;
 
-        
-        // jump
-        if (Input.GetButton("Jump"))
-        {
-            _moveDirection.y = jumpSpeed;
-        }
-        
 
-        // apply gravity
-        _moveDirection.y -= drag * Time.deltaTime * Time.deltaTime;
+// jump
+if (Input.GetButton("Jump"))
+{
+    _moveDirection.y = jumpSpeed;
+}
 
-        // move the character
-        controller.Move(_moveDirection);
-       */
 
-       
+// apply gravity
+_moveDirection.y -= drag * Time.deltaTime * Time.deltaTime;
+
+// move the character
+controller.Move(_moveDirection);
+*/
+
