@@ -10,6 +10,7 @@ public class WorldController : MonoBehaviour
 {
     public float fDifficulty;
     // How quickly the game ramps up, with 0 being no rampup and 1 being double the speed once a second
+    // also how far objects will spawn off screen
     public float fMaxSpeed;
     // The max speed of the game, for an infinite mode
 
@@ -20,6 +21,9 @@ public class WorldController : MonoBehaviour
     // The scroll speed of the world, in units/second
     private float _fGroundSize;
     // The size of the ground, so objects at the end of the ground can be moved to the beggining of the ground
+    private float _fSpawnDist;
+    // The distance from the right of the screen that objects will spawn
+    private Material _mNewBlockMaterial;
 
     void Start()
     // Start is called before the first frame update
@@ -34,6 +38,11 @@ public class WorldController : MonoBehaviour
 
         // Initializing this here to make it more obvious that 1.0f is the starting speed and that it's not constant
         _fScrollSpeed = 1.0f;
+
+        //_mNewBlockMaterial = new Material();
+
+        if ( !SpawnBlock( "testblock" ) )
+            Debug.Log( "Something's gone wrong with spawning the block");
     }
 
     void DataChanged()
@@ -55,6 +64,9 @@ public class WorldController : MonoBehaviour
     {
         if ( _fScrollSpeed < fMaxSpeed )
             _fScrollSpeed *= 1 + ( fDifficulty * Time.deltaTime );
+
+        
+        _fSpawnDist = _fScrollSpeed / ( fDifficulty * 100 );
         
         for ( int i = -1; ++i < _tWorldObjects.Count; )
         {
@@ -82,9 +94,44 @@ public class WorldController : MonoBehaviour
         }
 
         // Entity is not a floor block, set inactive
-        gToBeRemoved.gameObject.SetActive( false );
         _tWorldObjects.Remove( gToBeRemoved.transform );
+        Object.Destroy( gToBeRemoved );
 
+    }
+
+    private bool SpawnBlock( string name )
+    {
+        try
+        {
+            if ( name.Length >= 6 && name.Substring( 0, 6 ).Equals( "ground" ) )
+                throw new System.Exception( "tried to spawn ground object" );
+            
+            Vector2 vSpawn = Camera.main.ScreenToWorldPoint( new Vector3( Screen.width, Screen.height*2f/3, 0 ) );
+            vSpawn.x += _fSpawnDist;
+            
+            GameObject gBlock = new GameObject( name );
+            SpriteRenderer srBlock = gBlock.AddComponent<SpriteRenderer>() as SpriteRenderer;
+            Vector2 vSpriteSize = new Vector2( 100, 100 );
+#if DEBUG
+            //Obviosly this is temporary. I'll only do this in debug mode so it can't possibly be mistaken for the final solution.
+            gBlock.GetComponent<SpriteRenderer>().material = new Material( Shader.Find( "Sprites/Default" ) );
+            Texture2D tex = Resources.Load( "dev/dev_1x1" ) as Texture2D;
+            gBlock.GetComponent<SpriteRenderer>().sprite = Sprite.Create( tex, new Rect( 0, 0, tex.width, tex.height ), new Vector2( .5f, .5f ), 100 );
+#endif //if debug
+            srBlock.color = new Color( 1, 1, 1, 1 );
+            //gBlock.GetComponent<SpriteRenderer>().
+            gBlock.transform.position = vSpawn;
+
+            _tWorldObjects.Add( gBlock.transform );
+
+            return true;
+        }
+        catch ( System.Exception e )
+        {
+            Debug.Log( e );
+            Debug.Log( e.StackTrace );
+            return false;
+        }
     }
 }
 #endif //if !WORLD_CS
