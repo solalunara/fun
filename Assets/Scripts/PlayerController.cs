@@ -31,6 +31,23 @@ public class PlayerController : MonoBehaviour
         rPlayerBody.AddForce(netHorizontalForce);
 
 
+
+    }
+
+    private void CollisionHelper()
+    { 
+        
+
+        RaycastHit2D thingHit = Physics2D.Raycast((Vector2) this.transform.position, rPlayerBody.velocity, rPlayerBody.velocity.magnitude);
+        if(thingHit) 
+        {
+            Vector2 playerDims = GetComponent<SpriteRenderer>().size;
+            float angle = Mathf.Atan2(rPlayerBody.velocity.y, rPlayerBody.velocity.x);
+            this.transform.position = thingHit.point;
+            rPlayerBody.velocity = Vector3.zero;
+
+            //note: not complete yet
+        }
     }
 
     private Vector2 NetForceHorizontal(bool leftPressed, bool rightPressed)
