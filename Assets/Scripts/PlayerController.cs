@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
             //float criticalAngle = Mathf.Atan2(playerDims.y, playerDims.x);
 
             this.transform.position = thingHit.point + ((Vector2)transform.position)*-.1f;
-            rPlayerBody.velocity = -rPlayerBody.velocity;
+            rPlayerBody.velocity = -rPlayerBody.velocity/3;
 
             //note: not complete yet
         }
