@@ -30,7 +30,8 @@ public class PlayerController : MonoBehaviour
 
         rPlayerBody.AddForce(netHorizontalForce);
 
-        if(rPlayerBody.velocity.magnitude >= 5) {
+        if (rPlayerBody.velocity.magnitude * Time.deltaTime >= 0.1)
+        {
             CollisionHelper();
         }
 
@@ -38,19 +39,24 @@ public class PlayerController : MonoBehaviour
     }
 
     private void CollisionHelper()
-    { 
+    {
+        //Bit shift the index of the layer (8) to get a bit mask
+        int layerMask = 1 << 8;
 
-        RaycastHit2D thingHit = Physics2D.Raycast((Vector2) this.transform.position, rPlayerBody.velocity.normalized, rPlayerBody.velocity.magnitude*Time.deltaTime);
-        if(thingHit) 
+        //This would cast rays only against colliders in layer 8, so we just inverse the mask.
+        layerMask = ~layerMask;
+
+        RaycastHit2D thingHit = Physics2D.Raycast((Vector2)this.transform.position, rPlayerBody.velocity.normalized, rPlayerBody.velocity.magnitude * Time.deltaTime, layerMask);
+        if (thingHit)
         {
-            Debug.Log("Possible Collision with " + thingHit.collider.tag);
+            Debug.Log("Possible Collision with: " + thingHit.collider.tag);
             Vector2 playerDims = GetComponent<SpriteRenderer>().size;
 
             //float angle = Mathf.Atan2(rPlayerBody.velocity.y, rPlayerBody.velocity.x);
             //float criticalAngle = Mathf.Atan2(playerDims.y, playerDims.x);
 
-            this.transform.position = thingHit.point;
-            rPlayerBody.velocity = Vector3.zero;
+            this.transform.position = thingHit.point + ((Vector2)transform.position)*-.1f;
+            rPlayerBody.velocity = -rPlayerBody.velocity;
 
             //note: not complete yet
         }
