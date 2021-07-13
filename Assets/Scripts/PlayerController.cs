@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     {
         rPlayerBody = GetComponent<Rigidbody2D>();
         bPlayerCollider = GetComponent<BoxCollider2D>();
+        rPlayerBody.freezeRotation = true;
     }
 
     // Update is called once per frame
