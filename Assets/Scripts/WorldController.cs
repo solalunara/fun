@@ -124,6 +124,7 @@ public class WorldController : MonoBehaviour
 #endif //if debug
             gBlock.AddComponent<BoxCollider2D>();
             gBlock.GetComponent<BoxCollider2D>().isTrigger = true;
+            gBlock.AddComponent<BoxManager>();
             //gBlock.GetComponent<SpriteRenderer>().
             gBlock.transform.position = vSpawn;
 
