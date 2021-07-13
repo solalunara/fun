@@ -30,19 +30,25 @@ public class PlayerController : MonoBehaviour
 
         rPlayerBody.AddForce(netHorizontalForce);
 
+        if(rPlayerBody.velocity.magnitude >= 5) {
+            CollisionHelper();
+        }
 
 
     }
 
     private void CollisionHelper()
     { 
-        
 
-        RaycastHit2D thingHit = Physics2D.Raycast((Vector2) this.transform.position, rPlayerBody.velocity, rPlayerBody.velocity.magnitude);
+        RaycastHit2D thingHit = Physics2D.Raycast((Vector2) this.transform.position, rPlayerBody.velocity.normalized, rPlayerBody.velocity.magnitude*Time.deltaTime);
         if(thingHit) 
         {
+            Debug.Log("Possible Collision with " + thingHit.collider.tag);
             Vector2 playerDims = GetComponent<SpriteRenderer>().size;
-            float angle = Mathf.Atan2(rPlayerBody.velocity.y, rPlayerBody.velocity.x);
+
+            //float angle = Mathf.Atan2(rPlayerBody.velocity.y, rPlayerBody.velocity.x);
+            //float criticalAngle = Mathf.Atan2(playerDims.y, playerDims.x);
+
             this.transform.position = thingHit.point;
             rPlayerBody.velocity = Vector3.zero;
 
