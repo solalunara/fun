@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 // Any variable marked as public is set in the unity editor, so the values can be changed for testing/debugging without recompiling the script
 public class WorldController : MonoBehaviour
 {
-    public float fDifficulty;
+    public static float fDifficulty = .01f;
     // How quickly the game ramps up, with 0 being no rampup and 1 being double the speed once a second
     // also how far objects will spawn off screen
     public float fMaxSpeed;

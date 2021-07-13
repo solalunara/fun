@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     BoxCollider2D bPlayerCollider;
 
     public const int speed = 5000;
+    public const float fJumpVelocity = 10f;
+    List<Collider2D> cTouchingObjects = new List<Collider2D>();
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +32,9 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(netHorizontalForce);
 
         rPlayerBody.AddForce(netHorizontalForce);
+
+        if ( cTouchingObjects.Count != 0 && Input.GetKey( KeyCode.Space ) )
+            rPlayerBody.velocity = new Vector2( rPlayerBody.velocity.x, fJumpVelocity );
 
         if (rPlayerBody.velocity.magnitude * Time.deltaTime >= 0.1)
         {
@@ -83,6 +88,8 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D cOther)
     {
         //Debug.Log( "this object just collided" );
+        if ( cOther.gameObject != Camera.main.gameObject )
+            cTouchingObjects.Add( cOther.collider );
     }
     private void OnCollisionStay2D(Collision2D cOther)
     {
@@ -91,6 +98,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionExit2D(Collision2D cOther)
     {
         //Debug.Log( "this object is no longer colliding with an object" );
+        cTouchingObjects.Remove( cOther.collider );
     }
 
 }
