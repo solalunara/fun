@@ -1,9 +1,11 @@
 #if !WORLD_CS
 #define WORLD_CS
+#endif
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Any variable marked as public is set in the unity editor, so the values can be changed for testing/debugging without recompiling the script
 public class WorldController : MonoBehaviour
@@ -28,6 +30,8 @@ public class WorldController : MonoBehaviour
     void Start()
     // Start is called before the first frame update
     {
+        if ( !buttonScript.GUI_USED )
+            SceneManager.LoadScene( "GUI" );
         // Get the transforms of all the blocks that make up the world, and store it locally
         _tWorldObjects = new List<Transform>(GetComponentsInChildren<Transform>( /* Include Inactive Objects = */ false ));
 
@@ -77,7 +81,7 @@ public class WorldController : MonoBehaviour
             // AND it's on the left of the screen 
             // AND sufficient time has passed for the level to be loaded and visibility to be calculated
             // then kill it with fire
-            if ( !_tWorldObjects[i].gameObject.GetComponent<Renderer>().isVisible && _tWorldObjects[i].position.x < 0 && Time.frameCount > 20 )
+            if ( !_tWorldObjects[i].gameObject.GetComponent<Renderer>().isVisible && _tWorldObjects[i].position.x < 0 && Time.timeSinceLevelLoad > 1 )
                 RemoveBlock( _tWorldObjects[i].gameObject );
         }
     }
@@ -110,7 +114,7 @@ public class WorldController : MonoBehaviour
             vSpawn.x += _fSpawnDist;
             
             GameObject gBlock = new GameObject( name );
-            SpriteRenderer srBlock = gBlock.AddComponent<SpriteRenderer>() as SpriteRenderer;
+            gBlock.AddComponent<SpriteRenderer>();
             Vector2 vSpriteSize = new Vector2( 100, 100 );
 #if DEBUG
             //Obviosly this is temporary. I'll only do this in debug mode so it can't possibly be mistaken for the final solution.
@@ -118,7 +122,8 @@ public class WorldController : MonoBehaviour
             Texture2D tex = Resources.Load( "dev/dev_1x1" ) as Texture2D;
             gBlock.GetComponent<SpriteRenderer>().sprite = Sprite.Create( tex, new Rect( 0, 0, tex.width, tex.height ), new Vector2( .5f, .5f ), 100 );
 #endif //if debug
-            srBlock.color = new Color( 1, 1, 1, 1 );
+            gBlock.AddComponent<BoxCollider2D>();
+            gBlock.GetComponent<BoxCollider2D>().isTrigger = true;
             //gBlock.GetComponent<SpriteRenderer>().
             gBlock.transform.position = vSpawn;
 
@@ -134,4 +139,3 @@ public class WorldController : MonoBehaviour
         }
     }
 }
-#endif //if !WORLD_CS
