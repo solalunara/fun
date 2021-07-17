@@ -158,7 +158,7 @@ public class WorldController : MonoBehaviour
         float fSpawn = Camera.main.ScreenToWorldPoint( new Vector3( Screen.width, 0, 0 ) ).x + _fSpawnDist;
 
         // Where to look for the resources to spawn the block
-        string sTexturePath = "dev/dev_1x1";
+        string sTexturePath = "hostiles/Enemyblock";
         string sSpritePath = "Sprites/Default";
 
         // pixels per unit
@@ -210,8 +210,8 @@ public class SpawnHeights
 {
     public static readonly float[] fBlockHeights = 
     { 
-        /* BottomBlockHeight: */ -3f, 
-        /* MiddleBlockHeight: */ -1f, 
-        /* TopBlockHeight: */ 1f, 
+        /* BottomBlockHeight: */ -2.5f, 
+        /* MiddleBlockHeight: */ -0.5f, 
+        /* TopBlockHeight: */ 1.5f, 
     };
 }
