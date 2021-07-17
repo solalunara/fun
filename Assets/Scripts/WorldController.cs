@@ -164,15 +164,25 @@ public class WorldController : MonoBehaviour
         // pixels per unit
         int ippu = 100;
 
-        // Go through the given flags, and seperate them into seperate blocks with different heights
-        if ( ( wFlags & WorldFlags.isBottom ) != 0 )
+        // Split up the flags into seperate objects and create objects with 1 bit flags
+
+        // Initially i did this using seperate if statements, but typing my comment made me realize there was a general way to do it
+        // using memory logic i learned from c++. This approach has the advantage that adding future layers is extremely simple, just add
+        // a flag in the enum of BoxManager.cs and add the y value to the SpawnHeights class (located below this class)
+        for ( int i = -1; ++i < sizeof( WorldFlags ); )
+        {
+            if ( ( wFlags & (WorldFlags) ( 1 << i ) ) != 0 )
+                SpawnBlock( new Vector2( fSpawn, SpawnHeights.fBlockHeights[i]) , "hostileblock" + i, sTexturePath, sSpritePath, ippu, true, (WorldFlags) (1 << i) );
+        }
+
+        /*if ( ( wFlags & WorldFlags.isBottom ) != 0 )
             SpawnBlock( new Vector2( fSpawn, SpawnHeights.fBottomBlockHeight ), "HostileBottomBlock", sTexturePath, sSpritePath, ippu, true, WorldFlags.isBottom );
         
         if ( ( wFlags & WorldFlags.isMiddle ) != 0 )
             SpawnBlock( new Vector2( fSpawn, SpawnHeights.fMiddleBlockHeight ), "HostileMiddleBlock", sTexturePath, sSpritePath, ippu, true, WorldFlags.isMiddle );
 
         if ( ( wFlags & WorldFlags.isTop ) != 0 )
-            SpawnBlock( new Vector2( fSpawn, SpawnHeights.fTopBlockHeight ), "HostileTopBlock", sTexturePath, sSpritePath, ippu, true, WorldFlags.isTop );
+            SpawnBlock( new Vector2( fSpawn, SpawnHeights.fTopBlockHeight ), "HostileTopBlock", sTexturePath, sSpritePath, ippu, true, WorldFlags.isTop );*/
 
         return true;
     }
@@ -196,9 +206,12 @@ public class WorldController : MonoBehaviour
     }
 }
 
-public static class SpawnHeights
+public class SpawnHeights
 {
-    public static readonly float fBottomBlockHeight = -3f;
-    public static readonly float fMiddleBlockHeight = -1f;
-    public static readonly float fTopBlockHeight = 1f;
+    public static readonly float[] fBlockHeights = 
+    { 
+        /* BottomBlockHeight: */ -3f, 
+        /* MiddleBlockHeight: */ -1f, 
+        /* TopBlockHeight: */ 1f, 
+    };
 }
