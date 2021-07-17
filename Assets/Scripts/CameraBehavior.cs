@@ -50,18 +50,6 @@ public class CameraBehavior : MonoBehaviour
         //eCameraEdge.SetPoints(pointsV2);
     }
 
-    private Vector2[] V3arrToV2arr(Vector3[] inputArr) 
-    {
-
-        Vector2[] outputArr = new Vector2[inputArr.Length];
-
-        for(int i = 0; i<inputArr.Length; i++) 
-        {
-            outputArr[i] = (Vector2) inputArr[i];
-        }
-
-        return outputArr;
-    }
 
 
     // Update is called once per frame

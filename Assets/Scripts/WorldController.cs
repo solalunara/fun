@@ -5,17 +5,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 // Any variable marked as public is set in the unity editor, so the values can be changed for testing/debugging without recompiling the script
 public class WorldController : MonoBehaviour
 {
+    // These are here for personal QOL after working with the source engine so much
+    public static void Assert(bool inBool){Debug.Assert(inBool);}
+    public static void DevMsg(char[] msg){Debug.Log( msg );}
+
     public static float fDifficulty = .01f;
     // General difficulty of the game controls, listed below.
         // how quickly the game ramps up (+)
         // how far objects will spawn off screen (-)
         // how long between spawns of hostile blocks (-)
         // the max speed (+)
+        // TODO: balance this
+
 
     private float fMaxSpeed = 10 * ( fDifficulty * 50 + .5f );
     // The max speed of the game, so it doesn't grow exponentially and become impossible after a certain point
@@ -33,13 +39,14 @@ public class WorldController : MonoBehaviour
     // The space in world units between spawns.
     private float _fDistance;
     // The current distance of the world, calculated as the sum of speed*time every frame
+    private GameObject gScore;
 
     void Start()
     // Start is called before the first frame update
     {
         // If the GUI has not been used, and this scene is loading, send the game to the GUI
         if ( !buttonScript.GUI_USED )
-            SceneManager.LoadScene( "GUI" );
+            UTIL.LoadScene( "GUI" );
 
         // Get the transforms of all the blocks that make up the world, and store it locally
         _tWorldObjects = new List<Transform>(GetComponentsInChildren<Transform>( /* Include Inactive Objects = */ false ));
@@ -65,6 +72,9 @@ public class WorldController : MonoBehaviour
         SpawnBlocks( WorldFlags.isBottom );
         SpawnBlocks( WorldFlags.isMiddle );
         SpawnBlocks( WorldFlags.isTop );
+
+        gScore = GameObject.Find( "Score" );
+        Assert( gScore != null );
     }
 
     void GroundChanged()
@@ -125,6 +135,8 @@ public class WorldController : MonoBehaviour
             // Spawn the blocks
             SpawnBlocks( wfSpawn );
         }
+
+        gScore.GetComponent<Text>().text = "Score: " + _fDistance + "\nSpeed: " + _fScrollSpeed;
     }
 
     void RemoveBlock( GameObject gToBeRemoved )
@@ -172,8 +184,9 @@ public class WorldController : MonoBehaviour
         for ( int i = -1; ++i < sizeof( WorldFlags ); )
         {
             if ( ( wFlags & (WorldFlags) ( 1 << i ) ) != 0 )
-                SpawnBlock( new Vector2( fSpawn, SpawnHeights.fBlockHeights[i]) , "hostileblock" + i, sTexturePath, sSpritePath, ippu, true, (WorldFlags) (1 << i) );
+                _tWorldObjects.Add( UTIL.SpawnBlock( new Vector2( fSpawn, SpawnHeights.fBlockHeights[i]) , "hostileblock" + i, sTexturePath, sSpritePath, ippu, true, true, (WorldFlags) (1 << i) ) );
         }
+        
 
         /*if ( ( wFlags & WorldFlags.isBottom ) != 0 )
             SpawnBlock( new Vector2( fSpawn, SpawnHeights.fBottomBlockHeight ), "HostileBottomBlock", sTexturePath, sSpritePath, ippu, true, WorldFlags.isBottom );
@@ -186,24 +199,7 @@ public class WorldController : MonoBehaviour
 
         return true;
     }
-    private void SpawnBlock( Vector2 vSpawn, string name, string sTexturePath, string sSpritePath, float ippu, bool isHostile, WorldFlags flags )
-    // creates a block with specified details
-    {
-        // I'm not even going to bother to comment this code. Just look at the method name and the inputs, and ignore the actual code.
-        GameObject gBlock = new GameObject( name );
-        SpriteRenderer srBlock = gBlock.AddComponent<SpriteRenderer>() as SpriteRenderer;
-        Texture2D tex = Resources.Load( sTexturePath ) as Texture2D;
-        BoxManager bmBlock = gBlock.AddComponent<BoxManager>() as BoxManager;
-        srBlock.material = new Material( Shader.Find( sSpritePath ) );
-        srBlock.sprite = Sprite.Create( tex, new Rect( 0, 0, tex.width, tex.height ), new Vector2( .5f, .5f ), ippu );
-        bmBlock.iEFlags = flags;
-        vSpawn.x += tex.width/2 / ippu;
-        gBlock.transform.position = vSpawn;
-        BoxCollider2D bcBlock = gBlock.AddComponent<BoxCollider2D>() as BoxCollider2D;
-        if ( isHostile )
-            bcBlock.isTrigger = true;
-        _tWorldObjects.Add( gBlock.transform );
-    }
+    
 }
 
 public class SpawnHeights
@@ -215,3 +211,4 @@ public class SpawnHeights
         /* TopBlockHeight: */ 1.5f, 
     };
 }
+
